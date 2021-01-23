@@ -32,9 +32,7 @@ public class PrimaryController implements Initializable {
 
         searchBox.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER) {
-                // todo check for the right assginment
-                treeView.setRoot(createNode(new File("/")));
-                System.out.println("Enter pressed ");
+               populate();
             }
         });
     }
@@ -42,11 +40,12 @@ public class PrimaryController implements Initializable {
     @FXML
     public void populate(){
         // todo check for the right assginment
-        treeView.setRoot(createNode(new File("/")));
+        // todo handle error
+        treeView.setRoot(createNode(new File(searchBox.getText())));
         System.out.println("Enter pressed ");
     }
-    // This method creates a TreeItem to represent the given File. It does this
-    // by overriding the TreeItem.getChildren() and TreeItem.isLeaf() methods
+    // This method creates a TreeItem to represent the given File.
+    // It does this by overriding the TreeItem.getChildren() and TreeItem.isLeaf() methods
     // anonymously, but this could be better abstracted by creating a
     // 'FileTreeItem' subclass of TreeItem. However, this is left as an exercise
     // for the reader.
