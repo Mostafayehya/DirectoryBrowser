@@ -1,0 +1,8 @@
+#text{
+    -fx-font: 25px "sans-serif";
+    -fx-fill: #eb2020;
+}
+
+#root{
+    -fx-background-color: #329ba8;
+}
