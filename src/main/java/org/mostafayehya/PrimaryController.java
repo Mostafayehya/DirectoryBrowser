@@ -1,6 +1,8 @@
 package org.mostafayehya;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -10,6 +12,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 
 public class PrimaryController implements Initializable {
@@ -49,7 +53,7 @@ public class PrimaryController implements Initializable {
     // anonymously, but this could be better abstracted by creating a
     // 'FileTreeItem' subclass of TreeItem. However, this is left as an exercise
     // for the reader.
-    private TreeItem<File> createNode(final File f) {
+    private TreeItem<File> createNode(final File f)  {
         return new TreeItem<File>(f) {
             // We cache whether the File is a leaf or not. A File is a leaf if
             // it is not a directory and does not have any files contained within
@@ -71,8 +75,6 @@ public class PrimaryController implements Initializable {
                 if (isFirstTimeChildren) {
                     isFirstTimeChildren = false;
 
-                    // First getChildren() call, so we actually go off and
-                    // determine the children of the File contained in this TreeItem.
                     super.getChildren().setAll(buildChildren(this));
                 }
                 return super.getChildren();
