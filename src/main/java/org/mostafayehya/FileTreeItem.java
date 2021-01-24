@@ -13,6 +13,10 @@ public class FileTreeItem extends TreeItem<File> {
     private boolean isFirstTimeChildren = true;
     private boolean isFirstTimeLeaf = true;
 
+    public FileTreeItem(File childFile) {
+        super(childFile);
+    }
+
     @Override
     public ObservableList<TreeItem<File>> getChildren() {
         if (isFirstTimeChildren) {
@@ -31,7 +35,7 @@ public class FileTreeItem extends TreeItem<File> {
                 ObservableList<TreeItem<File>> children = FXCollections.observableArrayList();
 
                 for (File childFile : files) {
-                    children.add(new TreeItem<>(childFile));
+                    children.add(new FileTreeItem(childFile));
                 }
 
                 return children;

@@ -25,9 +25,6 @@ public class PrimaryController implements Initializable {
     private TreeView<File> treeView;
 
     @FXML
-    private ListView<File> listView;
-
-    @FXML
     private Button button;
 
     @Override
@@ -36,25 +33,31 @@ public class PrimaryController implements Initializable {
 
         searchBox.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER) {
-               populate();
+                populate();
             }
         });
     }
 
     @FXML
-    public void populate(){
+    public void populate() {
         // todo check for the right assginment
         // todo handle error
-        treeView.setRoot(createNode(new File(searchBox.getText())));
+        try {
+            ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/root.png")));
+            treeView.setRoot(createNode(new File(searchBox.getText()), imageView));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         System.out.println("Enter pressed ");
     }
+
     // This method creates a TreeItem to represent the given File.
     // It does this by overriding the TreeItem.getChildren() and TreeItem.isLeaf() methods
     // anonymously, but this could be better abstracted by creating a
     // 'FileTreeItem' subclass of TreeItem. However, this is left as an exercise
     // for the reader.
-    private TreeItem<File> createNode(final File f)  {
-        return new TreeItem<File>(f) {
+    private TreeItem<File> createNode(final File f, ImageView imageView) throws FileNotFoundException {
+        return new TreeItem<File>(f, imageView) {
             // We cache whether the File is a leaf or not. A File is a leaf if
             // it is not a directory and does not have any files contained within
             // it. We cache this as isLeaf() is called often, and doing the
@@ -75,7 +78,11 @@ public class PrimaryController implements Initializable {
                 if (isFirstTimeChildren) {
                     isFirstTimeChildren = false;
 
-                    super.getChildren().setAll(buildChildren(this));
+                    try {
+                        super.getChildren().setAll(buildChildren(this));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
                 return super.getChildren();
             }
@@ -91,7 +98,7 @@ public class PrimaryController implements Initializable {
                 return isLeaf;
             }
 
-            private ObservableList<TreeItem<File>> buildChildren(TreeItem<File> TreeItem) {
+            private ObservableList<TreeItem<File>> buildChildren(TreeItem<File> TreeItem) throws FileNotFoundException {
                 File f = TreeItem.getValue();
                 if (f != null && f.isDirectory()) {
                     File[] files = f.listFiles();
@@ -99,7 +106,16 @@ public class PrimaryController implements Initializable {
                         ObservableList<TreeItem<File>> children = FXCollections.observableArrayList();
 
                         for (File childFile : files) {
-                            children.add(createNode(childFile));
+                            if (childFile.isFile()) {
+                                ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/file.png")));
+                                children.add(createNode(childFile, imageView));
+
+                            } else {
+                                ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/closed.png")));
+                                children.add(createNode(childFile, imageView));
+
+                            }
+
                         }
 
                         return children;
